@@ -2,9 +2,9 @@
 Repository containing the project files for CEN4020's Team Utah.
 
 Contributors:
-Deepak Putta
-Jose Ramirez Fuentes
-Jaason Raudales
-Charles Read
-Keylin Sanchez
-Joseph Shatti
+Deepak Putta\
+Jose Ramirez Fuentes\
+Jaason Raudales\
+Charles Read\
+Keylin Sanchez\
+Joseph Shatti\
