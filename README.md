@@ -1,7 +1,7 @@
 # inCollege-Team-Utah
 Repository containing the project files for CEN4020's Team Utah.
 
-Contributors:
+Contributors:\
 Deepak Putta\
 Jose Ramirez Fuentes\
 Jaason Raudales\
