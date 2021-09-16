@@ -7,4 +7,4 @@ Jose Ramirez Fuentes\
 Jaason Raudales\
 Charles Read\
 Keylin Sanchez\
-Joseph Shatti\
+Joseph Shatti
