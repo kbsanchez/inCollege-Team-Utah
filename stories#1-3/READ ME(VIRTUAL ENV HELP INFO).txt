@@ -1,8 +1,0 @@
-In order to activate the virtual environment do the following:
--go into the terminal
--make sure to be in the directory that has both the venv folder and the main.py file
-- run the following in the terminal:
-	"venv/Scripts/activate"
-
-that should activate the virtual environment and to run the python file in there just write:
-	"python main.py"
