@@ -134,5 +134,5 @@ def main():
         else:
             print("Invalid choice. Please pick an option from the menu.")
 
-if __name__ == '__main__':
+if __name__ == '__main__':  #pragma: no cover
     main()
