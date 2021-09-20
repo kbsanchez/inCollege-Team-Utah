@@ -1,5 +1,6 @@
 import sqlite3
 from getpass import getpass
+from main_menu import main_menu
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
@@ -84,10 +85,8 @@ def login_attempt(username, password):
     c.execute(query, data)
     conn.commit()
     tuple = c.fetchall()
-    if len(tuple) > 0:
-        print("You have successfully logged in")
-    else:
-        print("Incorrect username/password, please try again")
+   
+    return len(tuple) != 0
 
 #CHOICE IS A CHAR THAT HELPS NAVIGATE THROUGH THE PROGRAM MENU
 def main():
@@ -130,7 +129,14 @@ def main():
         elif choice == 'l':
             username = input("Username: ")
             password = getpass()
-            login_attempt(username, password)
+            isLoggedIn = login_attempt(username, password)
+
+            if isLoggedIn:
+                print("You have successfully logged in")
+                main_menu()
+            else:
+                print("Incorrect username/password, please try again")
+                
         else:
             print("Invalid choice. Please pick an option from the menu.")
 
