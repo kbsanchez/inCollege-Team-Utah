@@ -1,5 +1,32 @@
+def get_user_selection():
+    selection_text = input("Please make a choice from the menu: ")
+    return int(selection_text) - 1
+
+
 def learn_skills_menu():
-    pass
+    while True:
+        print(
+            """1 - Networking
+            2 - Time Management
+            3 - Public Speaking
+            4 - Agile and Scrum
+            5 - Leadership
+
+            6 - Go Back"""
+        )
+
+        selection = None
+
+        try:
+            selection = get_user_selection()
+        except:
+            print("Invalid selection")
+            continue
+
+        if selection == 6:
+            return
+        else:
+            print("Under Construction")
 
 
 def logout():
@@ -27,8 +54,7 @@ def print_menu_options():
 
 
 def get_user_action_selection():
-    selection_text = input("Please make a choice from the menu: ")
-    selection = int(selection_text) - 1
+    selection = get_user_selection()
 
     return optionsAndActions[selection][1]
 
