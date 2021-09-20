@@ -4,6 +4,10 @@ from typing import Union
 from .context import main
 from .utils import populate_db
 
+"""
+Beginning of tests for sprint #1
+"""
+
 SAMPLE_USERNAME: str = "User1"
 SAMPLE_PASSWORD: str = "$Aample123"
 SAMPLE_UNREGISTERED_USERNAME: str = "User2"
@@ -14,8 +18,11 @@ SAMPLE_NO_UPPER_PASSWORD: str = "$ample123"
 SAMPLE_NO_DIGIT_PASSWORD: str = "$Ampleabc"
 SAMPLE_NO_ALPHA_PASSWORD: str = "Sample123"
 
+SAMPLE_MENU_SELECTION: str = "8"
+
 mock_db: Union[sqlite3.Connection, None] = None
 test_db: Union[sqlite3.Connection, None] = None
+test2_db: Union[sqlite3.Connection, None] = None
 
 
 @pytest.fixture(autouse=True)
@@ -29,7 +36,7 @@ def run_around_tests() -> None:
     main.c = test_db.cursor()
 
     yield  # test runs
-    
+
     # teardown
 
 
@@ -47,8 +54,8 @@ def test_data_entry() -> None:
     query: str = "SELECT * FROM Username WHERE username = ?;"
     cursor.execute(query, (SAMPLE_USERNAME,))
     assert len(cursor.fetchall()) == 1
-    
-    
+
+
 def test_look_value(capsys) -> None:
     populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
     main.input = lambda x: SAMPLE_UNREGISTERED_USERNAME  # to mock input
@@ -107,5 +114,40 @@ def test_login_attempt(capsys) -> None:
     assert output.out == "Incorrect username/password, please try again\n"
 
 
+def test_skills_menu_selection() -> None:
+    populate_db(test_db)
+    main.data_entry(SAMPLE_USERNAME, SAMPLE_PASSWORD)
+    cursor: sqlite3.Cursor = test_db.cursor()
+
+    populate_db(test2_db)
+    main.data_entry(SAMPLE_MENU_SELECTION)
+    cursor: sqlite3.Cursor = test2_db.cursor()
+
+    query: str = "Please make a choice from the menu: "
+    cursor.execute(query, (SAMPLE_MENU_SELECTION,))
+    assert len(cursor.fetchall()) == 1
+
+
+"""
+Under construction/needs more time
+
+def test_sixth_login_attempt(capsys) -> None:
+
+
+    output = capsys.readouterr()
+    assert output.out == "The amount of allowed accounts (5) has been reached"
+
+def test_saved_info() -> None:
+
+
+    
+"""
+
+
 def test_main() -> None:
     pass
+
+
+"""
+End of sprint 1 test cases
+"""
