@@ -1,6 +1,6 @@
 def get_user_selection():
     selection_text = input("Please make a choice from the menu: ")
-    return int(selection_text) - 1
+    return int(selection_text)
 
 
 def learn_skills_menu():
@@ -55,7 +55,7 @@ def print_menu_options():
 
 
 def get_user_action_selection():
-    selection = get_user_selection()
+    selection = get_user_selection() - 1
 
     return optionsAndActions[selection][1]
 
