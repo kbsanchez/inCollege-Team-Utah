@@ -38,13 +38,16 @@ def main_menu():
         print("\n")
         print_menu_options()
         print("\n")
+
+        action = None
         
         try:
             action = get_user_action_selection()
-            
-            if action is None:
-                print("Under Construction")
-            else:
-                action()
         except:
             print("Invalid selection")
+            continue
+          
+        if action is None:
+            print("Under Construction")
+        else:
+            action()
