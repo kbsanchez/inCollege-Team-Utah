@@ -7,12 +7,12 @@ def learn_skills_menu():
     while True:
         print(
             """1 - Networking
-            2 - Time Management
-            3 - Public Speaking
-            4 - Agile and Scrum
-            5 - Leadership
+2 - Time Management
+3 - Public Speaking
+4 - Agile and Scrum
+5 - Leadership
 
-            6 - Go Back"""
+6 - Go Back"""
         )
 
         selection = None
@@ -41,16 +41,17 @@ optionsAndActions = [
     ("Log Out", logout)
 ]
 
+
 def print_menu_options():
-        options = [
-            f"{i + 1} - {x[0]}" 
-            for i, x 
-            in enumerate(optionsAndActions)
-        ]
+    options = [
+        f"{i + 1} - {x[0]}"
+        for i, x
+        in enumerate(optionsAndActions)
+    ]
 
-        options_text = "\n".join(options)
+    options_text = "\n".join(options)
 
-        print(options_text)
+    print(options_text)
 
 
 def get_user_action_selection():
@@ -66,13 +67,13 @@ def main_menu():
         print("\n")
 
         action = None
-        
+
         try:
             action = get_user_action_selection()
         except:
             print("Invalid selection")
             continue
-          
+
         if action is None:
             print("Under Construction")
         else:
