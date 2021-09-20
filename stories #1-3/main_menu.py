@@ -3,7 +3,8 @@ def learn_skills_menu():
 
 
 def logout():
-    pass
+    print("Thank you for using InCollege!")
+    exit()
 
 
 optionsAndActions = [
