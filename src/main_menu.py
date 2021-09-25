@@ -31,7 +31,6 @@ def learn_skills_menu():
 
 def logout():
     print("Thank you for using InCollege!")
-    exit()
 
 
 optionsAndActions = [
@@ -78,3 +77,6 @@ def main_menu():
             print("Under Construction")
         else:
             action()
+
+        if action == logout:
+            return
