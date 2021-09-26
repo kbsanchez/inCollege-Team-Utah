@@ -1,8 +1,8 @@
 import pytest
 import sqlite3
 from typing import Union
-from .context import main
-from .utils import populate_db
+from test.context import main, main_menu
+from test.utils import populate_db
 
 """
 Beginning of tests for sprint #1
@@ -18,11 +18,11 @@ SAMPLE_NO_UPPER_PASSWORD: str = "$ample123"
 SAMPLE_NO_DIGIT_PASSWORD: str = "$Ampleabc"
 SAMPLE_NO_ALPHA_PASSWORD: str = "Sample123"
 
-SAMPLE_MENU_SELECTION: str = "8"
+SAMPLE_IN_RANGE_MENU_SELECTION: str = "1"
+SAMPLE_OUT_OF_RANGE_MENU_SELECTION: str = "8"
 
 mock_db: Union[sqlite3.Connection, None] = None
 test_db: Union[sqlite3.Connection, None] = None
-test2_db: Union[sqlite3.Connection, None] = None
 
 
 @pytest.fixture(autouse=True)
@@ -114,25 +114,29 @@ def test_login_attempt(capsys) -> None:
     assert output.out == "Incorrect username/password, please try again\n"
 
 
-def test_skills_menu_selection() -> None:
-    populate_db(test_db)
-    main.data_entry(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    cursor: sqlite3.Cursor = test_db.cursor()
+def test_main_menu_selection(monkeypatch) -> None:
+    #prereq for test case is being logged in
+    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
 
-    populate_db(test2_db)
-    main.data_entry(SAMPLE_MENU_SELECTION)
-    cursor: sqlite3.Cursor = test2_db.cursor()
+    monkeypatch.setattr('main_menu.get_user_selection', lambda: SAMPLE_IN_RANGE_MENU_SELECTION)
+    result = main_menu.get_user_action_selection()
 
-    query: str = "Please make a choice from the menu: "
-    cursor.execute(query, (SAMPLE_MENU_SELECTION,))
-    assert len(cursor.fetchall()) == 1
+    assert result.out == "Under Construction"
+
+def test_skills_menu_selection(monkeypatch) -> None:
+    # prereq for test case is being logged in
+    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
+
+    monkeypatch.setattr('main_menu.get_user_selection', lambda: SAMPLE_IN_RANGE_MENU_SELECTION)
+    result = main_menu.learn_skills_menu()
+
+    assert result.out == "Under Construction"
 
 
 """
-Under construction/needs more time
-
-def test_sixth_login_attempt(capsys) -> None:
-
+def test_sixth_user_attempt(capsys) -> None:
 
     output = capsys.readouterr()
     assert output.out == "The amount of allowed accounts (5) has been reached"
@@ -140,7 +144,6 @@ def test_sixth_login_attempt(capsys) -> None:
 def test_saved_info() -> None:
 
 
-    
 """
 
 
