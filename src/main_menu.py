@@ -58,7 +58,16 @@ def print_menu_options():
 def get_user_action_selection():
     selection = get_user_selection() - 1
 
-    return optionsAndActions[selection][1]
+    try:
+        action = optionsAndActions[selection][1]
+
+        if action is None:
+            print("Under Construction")
+
+        return action()
+
+    except:
+        print("Invalid selection")
 
 
 def main_menu():
@@ -67,17 +76,9 @@ def main_menu():
         print_menu_options()
         print("\n")
 
-        action = None
+        action = get_user_action_selection()
 
-        try:
-            action = get_user_action_selection()
-        except:
-            print("Invalid selection")
-            continue
-
-        if action is None:
-            print("Under Construction")
-        else:
+        if action is not None:
             action()
 
         if action == logout:
