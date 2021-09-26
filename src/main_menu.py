@@ -25,6 +25,8 @@ def learn_skills_menu():
 
         if selection == 6:
             return
+        elif selection > 6:
+            print("Invalid selection")
         else:
             print("Under Construction")
 
