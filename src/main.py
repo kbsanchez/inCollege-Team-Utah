@@ -1,6 +1,6 @@
 import sqlite3
 from getpass import getpass
-from main_menu import main_menu
+from src.main_menu import main_menu
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
