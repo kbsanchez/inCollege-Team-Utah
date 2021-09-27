@@ -59,12 +59,15 @@ def get_user_action_selection():
     selection = get_user_selection() - 1
 
     try:
+        if selection < 0:
+            raise Exception()
+
         action = optionsAndActions[selection][1]
 
         if action is None:
             print("Under Construction")
 
-        return action()
+        return action
 
     except:
         print("Invalid selection")
