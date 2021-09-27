@@ -69,7 +69,7 @@ def job_intern_menu():
             job_entry(username,job_title,job_description,employer,location,salary)
         elif selection == 2:
             return
-        elif selection != "1" or selection != "2":
+else:
             print("Invalid Input. Please choose 1 or 2.")
 #
 
