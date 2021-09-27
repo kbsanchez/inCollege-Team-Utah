@@ -7,14 +7,14 @@ c = conn.cursor()
 
 #creates new table for usernames and passwords
 def create_table():
-    query = """CREATE TABLE IF NOT EXISTS Username(username TEXT, password TEXT,firstname TEXT,lastname TEXT)"""
+    query = """CREATE TABLE IF NOT EXISTS Username(username TEXT, password TEXT,firstname TEXT, lastname TEXT, logedin INTEGER)"""
     c.execute(query)
     conn.commit()
 
 #inserts login info from user into table
-def data_entry(username, password,firstname,lastname):
-    query = """INSERT INTO Username (username, password,firstname,lastname) VALUES(?, ?,?,?);"""
-    data = (username, password,firstname,lastname)
+def data_entry(username, password,firstname,lastname,logedin):
+    query = """INSERT INTO Username (username, password,firstname,lastname, logedin) VALUES(?,?,?,?,?);"""
+    data = (username, password,firstname,lastname,logedin)
     c.execute(query, data)
     conn.commit()
 
@@ -96,6 +96,13 @@ def login_attempt(username, password):
    
     return len(tuple) != 0
 
+#function that changes logedin value in order to know what user is logedin
+def login(username):
+    query = """UPDATE Username SET logedin = 1 WHERE username = ?"""
+    target = (username,)
+    c.execute(query,target)
+    conn.commit()
+
 #CHOICE IS A CHAR THAT HELPS NAVIGATE THROUGH THE PROGRAM MENU
 def main():
     choice = '?'
@@ -141,20 +148,23 @@ def main():
                 last_name=input("last name: ")
                 username2 = look_value(username)
                 password = getpass()
+                logedin = 0
                 check_pw(password)
-                data_entry(username2, password,first_name,last_name)
+                data_entry(username2,password,first_name,last_name,logedin)
             elif capacity == 5:
                 print("The amount of allowed accounts (5) has been reached")
                 continue
-
 
     #LOGIN TO PROGRAM
         elif choice == 'l':
             username = input("Username: ")
             password = getpass()
             isLoggedIn = login_attempt(username, password)
+            
 
             if isLoggedIn:
+                
+                login(username)
                 print("You have successfully logged in")
                 main_menu()
             else:
