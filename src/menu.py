@@ -34,32 +34,20 @@ class Menu:
             return self._do_nothing
 
     def _do_nothing(self) -> None:
-<<<<<<< HEAD
         """do nothing"""
         pass
 
     def _end(self) -> bool:
         """exit the menu"""
-=======
-        pass
-
-    def _end(self) -> bool:
->>>>>>> e0da637b942831f93b2c9ed6477924540b90a2c7
         print(self.exit_text)
         return True
 
     def run(self) -> None:
         """run the menu"""
         done: bool = False
-<<<<<<< HEAD
         print(self.entry_text)
-=======
->>>>>>> e0da637b942831f93b2c9ed6477924540b90a2c7
         while not done:
             print(self)
             action: Callable = self._read()
             done = action()
-<<<<<<< HEAD
         print(self.exit_text)
-=======
->>>>>>> e0da637b942831f93b2c9ed6477924540b90a2c7
