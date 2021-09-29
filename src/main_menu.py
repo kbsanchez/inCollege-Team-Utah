@@ -1,3 +1,5 @@
+from links_menu import LinksMenu
+
 def get_user_selection():
     selection_text = input("Please make a choice from the menu: ")
     return int(selection_text)
@@ -39,6 +41,7 @@ optionsAndActions = [
     ("Job/Internship Search", None),
     ("Find Someone You Know", None),
     ("Learn a New Skill", learn_skills_menu),
+    ("InCollege Important links", LinksMenu().run),
     ("Log Out", logout)
 ]
 
