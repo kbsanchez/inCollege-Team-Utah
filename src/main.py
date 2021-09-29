@@ -103,6 +103,63 @@ def login(username):
     c.execute(query,target)
     conn.commit()
 
+def general():
+    choice='*'
+    while choice!='q':
+        print("si- Sign Up\nhc- Help Center\nab- About\npr- Press,\nbl- Blog,\nca- Careers,\nde Developers\nq-quit")
+        choice = input("Please select a option:")
+
+        if choice=='si':
+            createnewacc()
+        if choice=='hc':
+            print("We're here to help")
+        if choice =='ab':
+            print("In College: Welcome to In College, the world's largest college student network with many users in many countries and territories worldwide")
+        if choice=='pr':
+            print("In College Pressroom: Stay on top of the latest news, updates, and reports" )
+        if choice=='bl':
+            print( "Under construction")
+        if choice=='ca':
+            print( "Under construction")
+        if choice=='de':
+            print( "Under construction")
+
+
+
+def usefulllinks():
+    choice='*'
+    while choice!='q':
+        print("ge - general")
+        print("br - browse InCollege")
+        print("bs - business solutions")
+        print("di - directories")
+        print("q- quit")
+
+        choice = input("Please select a option:")
+
+        if choice == 'ge':
+            general()
+        if choice in ['br','bs','di']:
+            print("under construction")
+
+def createnewacc():
+    create_table()
+    capacity = number_rows()
+    if capacity < 5:
+        print("\n")
+        print("Please input a unique username and password")
+        username = input("Username: ")
+        first_name = input("first name: ")
+        last_name = input("last name: ")
+        username2 = look_value(username)
+        password = getpass()
+        logedin = 0
+        check_pw(password)
+        data_entry(username2, password, first_name, last_name, logedin)
+    elif capacity == 5:
+        print("The amount of allowed accounts (5) has been reached")
+
+
 #CHOICE IS A CHAR THAT HELPS NAVIGATE THROUGH THE PROGRAM MENU
 def main():
     choice = '?'
@@ -117,6 +174,8 @@ def main():
         print("q - Quit")
         print("f - find a friend")
         print("s - play a video of success story")
+        print("u - usefull links")
+
         print("\n")
 
         question = input("Please make a choice from the menu: ")
@@ -132,28 +191,16 @@ def main():
             print("video is now playing")
             Previous_page=input("press enter to the previous page")
 
+        if choice=='u':
+            usefulllinks()
+
     #QUITS THE PROGRAM
         if choice == 'q':
             exit()
 
     #CREATES NEW ACCOUNT
         elif choice == 'n':
-            create_table()
-            capacity = number_rows()
-            if capacity < 5:
-                print("\n")
-                print("Please input a unique username and password")
-                username = input("Username: ")
-                first_name=input("first name: ")
-                last_name=input("last name: ")
-                username2 = look_value(username)
-                password = getpass()
-                logedin = 0
-                check_pw(password)
-                data_entry(username2,password,first_name,last_name,logedin)
-            elif capacity == 5:
-                print("The amount of allowed accounts (5) has been reached")
-                continue
+            createnewacc()
 
     #LOGIN TO PROGRAM
         elif choice == 'l':
@@ -174,4 +221,5 @@ def main():
             print("Invalid choice. Please pick an option from the menu.")
 
 if __name__ == '__main__':  #pragma: no cover
+
     main()
