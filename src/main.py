@@ -1,6 +1,7 @@
 import sqlite3
 from getpass import getpass
 from main_menu import main_menu
+from links_menu import LinksMenu
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
@@ -117,6 +118,7 @@ def main():
         print("q - Quit")
         print("f - find a friend")
         print("s - play a video of success story")
+        print("i - InCollege Important Links")
         print("\n")
 
         question = input("Please make a choice from the menu: ")
@@ -131,6 +133,8 @@ def main():
         if choice=='s':
             print("video is now playing")
             Previous_page=input("press enter to the previous page")
+        if choice == 'i':
+            LinksMenu().run()
 
     #QUITS THE PROGRAM
         if choice == 'q':
