@@ -1,4 +1,8 @@
 from menu import Menu
+from typing import Optional
+from db_session import db
+from colorama import Fore, Style
+
 
 class LinksMenu(Menu):
     """inCollege links menu class"""
@@ -77,20 +81,107 @@ class GuestControlsMenu(Menu):
     def __init__(self):
         super().__init__()
         self.title = "Guest Controls"
-        self.subtitle = "These are our guest controls"
-        self.options["Toggle InCollege Email"] = self._do_nothing
-        self.options["Toggle SMS"] = self._do_nothing
-        self.options["Toggle Targeted Marketing Features"] = self._do_nothing
+
+        # database variables
+        self.username: str = str()
+        self.has_email: Optional[bool] = True
+        self.has_sms: Optional[bool] = True
+        self.has_marketing: Optional[bool] = True
+        self.loggedIn: Optional[bool] = False
+
+        # menu options
+        self.options["Toggle InCollege Email"] = self._toggle_email
+        self.options["Toggle SMS"] = self._toggle_sms
+        self.options["Toggle Targeted Marketing Features"] = self._toggle_marketing
+
+    def read_db(self) -> None:
+        """read values from database"""
+        cursor = db.cursor()
+        query: str = "SELECT username, email, sms, marketing FROM user WHERE loggedIn=1;"
+        cursor.execute(query)
+        result = cursor.fetchone()
+        if result is not None:
+            self.username, self.has_email, self.has_sms, self.has_marketing = result
+            self.loggedIn = True
+        else:
+            # user is not signed in
+            self.loggedIn = False
+
+        print("Read User name: ", self.username)
+        print(f"has email {self.has_email}, sms {self.has_sms}, marketing {self.has_marketing}")
+
+    def write_db(self):
+        """write values to database"""
+        cursor = db.cursor()
+        query: str = "UPDATE user SET email=?, sms=?, marketing=? WHERE username=?;"
+        cursor.execute(query, (self.has_email, self.has_sms, self.has_marketing, self.username))
+        print("Write User name: ", self.username)
+        print(f"has email {self.has_email}, sms {self.has_sms}, marketing {self.has_marketing}")
+        db.commit()
+
+    def _toggle_email(self) -> False:
+        self.has_email ^= 1
+        status = "on" if self.has_email else "off"
+        print(f"{Fore.GREEN}Email switched {status} {Style.RESET_ALL}\n")
+
+    def _toggle_sms(self):
+        self.has_sms ^= 1
+        status = "on" if self.has_email else "off"
+        print(f"{Fore.GREEN}SMS switched {status} {Style.RESET_ALL}\n")
+
+    def _toggle_marketing(self):
+        self.has_marketing ^= 1
+        status = "on" if self.has_email else "off"
+        print(f"{Fore.GREEN}Targeted marketing switched {status} {Style.RESET_ALL}\n")        
+
+    def run(self) -> None:
+        self.read_db()
+        super(GuestControlsMenu, self).run()
+        self.write_db()
 
 
 class LanguagesMenu(Menu):
     def __init__(self):
         super().__init__()
         self.title = "Languages"
-        self.subtitle = "These are our guest controls"
-        self.options["English"] = self._do_nothing
-        self.options["Spanish"] = self._do_nothing
 
+        # database variables
+        self.username: str = str()
+        self.language: str = str()
+        self.loggedIn: Optional[bool] = None
 
-if __name__ == '__main__':
-    LinksMenu().run()
+        # menu options
+        self.options["English"] = self._set_lang_english  # TODO Joseph 9/29: abstract
+        self.options["Spanish"] = self._set_lang_spanish
+
+    def read_db(self) -> None:
+        """read values from database"""
+        cursor = db.cursor()
+        query: str = "SELECT username, language FROM user WHERE loggedIn=1;"
+        cursor.execute(query)
+        result = cursor.fetchone()
+        if result is not None:
+            self.username, self.language = result
+            self.loggedIn = True
+        else:
+            self.loggedIn = False
+
+    def write_db(self):
+        """write values to database"""
+        cursor = db.cursor()
+        query: str = "UPDATE user SET language=? WHERE username=?;"
+        cursor.execute(query, (self.language, self.username))
+        db.commit()
+
+    def _set_lang_english(self):
+        print(f"{Fore.GREEN}Language changed to English{Style.RESET_ALL}\n")
+        self.language = 'english'
+
+    def _set_lang_spanish(self):
+        print(f"{Fore.GREEN}Language changed to Spanish{Style.RESET_ALL}\n")
+        self.language = 'spanish'
+
+    def run(self) -> None:
+        self.read_db()
+        super(LanguagesMenu, self).run()
+        self.write_db()

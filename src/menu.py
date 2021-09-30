@@ -1,6 +1,7 @@
 from indexed import IndexedOrderedDict as IOdict
 from colorama import Fore, Style
-from typing import Callable
+from typing import Callable, Dict
+
 
 class Menu:
     """base class for all menus"""
@@ -12,8 +13,8 @@ class Menu:
         self.generic_err: str = str()
         self.prompt: str = "Select an option from the menu: "
         self.return_option_text: str = "Go back\n"
-        self.invalid_input_err: str = f"{Fore.RED}Invalid Selection{Style.RESET_ALL}\n" # makes text red
-        self.options: dict[str, Callable] = IOdict()
+        self.invalid_input_err: str = f"{Fore.RED}Invalid Selection{Style.RESET_ALL}\n"  # makes text red
+        self.options: Dict[str, Callable] = IOdict()
         self.options[self.return_option_text] = self._end
 
     def __repr__(self) -> str:

@@ -2,8 +2,9 @@ import sqlite3
 from getpass import getpass
 from main_menu import main_menu
 from links_menu import LinksMenu
+from db_session import db
 
-conn = sqlite3.connect('Username.db')
+conn = db
 c = conn.cursor()
 
 #creates new table for usernames and passwords
