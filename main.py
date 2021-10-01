@@ -1,11 +1,8 @@
 import sqlite3
 from getpass import getpass
+from main_menu import main_menu
 
-from links_menu import LinksMenu
-from db_session import db
-from .main_menu import main_menu
-
-conn = db
+conn = sqlite3.connect('Username.db')
 c = conn.cursor()
 
 #creates new table for usernames and passwords
@@ -106,6 +103,66 @@ def login(username):
     c.execute(query,target)
     conn.commit()
 
+def general():
+    choice='*'
+    while choice!='q':
+        print("1- Sign Up\n2- Help Center\n3- About\n4- Press,\n5- Blog,\n6- Careers,\n7- Developers\nq- quit")
+        choice = input("Please select a option:")
+
+
+        if choice=='1':
+            createnewacc()
+        if choice=='2':
+            print("We're here to help")
+        if choice =='3':
+            print("In College: Welcome to In College, the world's largest college student network with many users in many countries and territories worldwide")
+        if choice=='4':
+            print("In College Pressroom: Stay on top of the latest news, updates, and reports" )
+        if choice=='5':
+            print( "Under construction")
+        if choice=='6':
+            print( "Under construction")
+        if choice=='7':
+            print( "Under construction")
+        if choice not in ['1','2','3','4','5','6','7']:
+            print("Invalid choice. Please pick an option from the menu.")
+
+def usefulllinks():
+    choice='*'
+    while choice!='q':
+        print("1 - general")
+        print("2 - browse InCollege")
+        print("3 - business solutions")
+        print("4 - directories")
+        print("q- quit")
+
+        choice = input("Please select a option:")
+
+        if choice == '1':
+            general()
+        if choice in ['2','3','4']:
+            print("under construction")
+        if choice not in ['1','2','3','4']:
+            print("Invalid choice. Please pick an option from the menu.")
+
+def createnewacc():
+    create_table()
+    capacity = number_rows()
+    if capacity < 5:
+        print("\n")
+        print("Please input a unique username and password")
+        username = input("Username: ")
+        first_name = input("first name: ")
+        last_name = input("last name: ")
+        username2 = look_value(username)
+        password = getpass()
+        logedin = 0
+        check_pw(password)
+        data_entry(username2, password, first_name, last_name, logedin)
+    elif capacity == 5:
+        print("The amount of allowed accounts (5) has been reached")
+
+
 #CHOICE IS A CHAR THAT HELPS NAVIGATE THROUGH THE PROGRAM MENU
 def main():
     choice = '?'
@@ -120,7 +177,8 @@ def main():
         print("q - Quit")
         print("f - find a friend")
         print("s - play a video of success story")
-        print("i - InCollege Important Links")
+        print("u - usefull links")
+
         print("\n")
 
         question = input("Please make a choice from the menu: ")
@@ -135,8 +193,9 @@ def main():
         if choice=='s':
             print("video is now playing")
             Previous_page=input("press enter to the previous page")
-        if choice == 'i':
-            LinksMenu().run()
+
+        if choice=='u':
+            usefulllinks()
 
     #QUITS THE PROGRAM
         if choice == 'q':
@@ -144,22 +203,7 @@ def main():
 
     #CREATES NEW ACCOUNT
         elif choice == 'n':
-            create_table()
-            capacity = number_rows()
-            if capacity < 5:
-                print("\n")
-                print("Please input a unique username and password")
-                username = input("Username: ")
-                first_name=input("first name: ")
-                last_name=input("last name: ")
-                username2 = look_value(username)
-                password = getpass()
-                logedin = 0
-                check_pw(password)
-                data_entry(username2,password,first_name,last_name,logedin)
-            elif capacity == 5:
-                print("The amount of allowed accounts (5) has been reached")
-                continue
+            createnewacc()
 
     #LOGIN TO PROGRAM
         elif choice == 'l':
@@ -180,4 +224,5 @@ def main():
             print("Invalid choice. Please pick an option from the menu.")
 
 if __name__ == '__main__':  #pragma: no cover
+
     main()
