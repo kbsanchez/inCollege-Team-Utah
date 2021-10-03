@@ -1,8 +1,11 @@
 import sqlite3
 from getpass import getpass
+
+from links_menu import LinksMenu
+from db_session import db
 from main_menu import main_menu
 
-conn = sqlite3.connect('Username.db')
+conn = db
 c = conn.cursor()
 
 # creates new table for usernames and passwords
@@ -196,8 +199,8 @@ def main():
         print("q - Quit")
         print("f - find a friend")
         print("s - play a video of success story")
+        print("i - InCollege Important Links")
         print("u - usefull links")
-
         print("\n")
 
         question = input("Please make a choice from the menu: ")
@@ -211,8 +214,10 @@ def main():
             previous_page = input("please enter to the previous page")
         if choice == 's':
             print("video is now playing")
+            Previous_page=input("press enter to the previous page")
+        if choice == 'i':
+            LinksMenu().run()
             Previous_page = input("press enter to the previous page")
-
         if choice == 'u':
             usefulllinks()
 

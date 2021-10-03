@@ -1,5 +1,6 @@
 #made a connection to main.py Username.db and added a function to count the jobs posted to enforce limit
 import sqlite3
+from links_menu import LinksMenu
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
@@ -36,6 +37,7 @@ def job_entry(username, title, description, employer, location, salary):
     c.execute(query,data)
     conn.commit()
 #
+
 
 def get_user_selection():
     selection_text = input("Please make a choice from the menu: ")
@@ -111,6 +113,7 @@ optionsAndActions = [
     ("Job/Internship Search", job_intern_menu),
     ("Find Someone You Know", None),
     ("Learn a New Skill", learn_skills_menu),
+    ("InCollege Important links", LinksMenu().run),
     ("Log Out", logout)
 ]
 
