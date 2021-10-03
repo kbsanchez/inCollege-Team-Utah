@@ -24,11 +24,6 @@ SAMPLE_NO_UPPER_PASSWORD: str = "$ample123"
 SAMPLE_NO_DIGIT_PASSWORD: str = "$Ampleabc"
 SAMPLE_NO_ALPHA_PASSWORD: str = "Sample123"
 
-SAMPLE_IN_RANGE_MENU_SELECTION: int = 1
-SAMPLE_IN_RANGE_MENU_SELECTION_2: int = 3
-SAMPLE_IN_RANGE_MENU_SELECTION_3: int = 4
-SAMPLE_OUT_OF_RANGE_MENU_SELECTION: int = 8
-
 mock_db: Union[sqlite3.Connection, None] = None
 test_db: Union[sqlite3.Connection, None] = None
 
@@ -121,60 +116,6 @@ def test_login_attempt(capsys) -> None:
     output = capsys.readouterr()
     assert output.out == "Incorrect username/password, please try again\n"
 
-
-# begin tests for get_user_selection and learn_skills_menu
-
-def test_main_menu_selection_1(monkeypatch) -> None:
-    # prereq for test case is being logged in
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-
-    monkeypatch.setattr('src.main_menu.get_user_selection', lambda: SAMPLE_IN_RANGE_MENU_SELECTION)
-    result = main_menu.get_user_action_selection()
-    assert result == None
-
-
-def test_main_menu_selection_3(monkeypatch) -> None:
-    # prereq for test case is being logged in
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-
-    monkeypatch.setattr('src.main_menu.get_user_selection', lambda: SAMPLE_IN_RANGE_MENU_SELECTION_2)
-    result = main_menu.get_user_action_selection()
-    assert result == main_menu.learn_skills_menu
-
-
-def test_main_menu_selection_4(monkeypatch) -> None:
-    # prereq for test case is being logged in
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-
-    monkeypatch.setattr('src.main_menu.get_user_selection', lambda: SAMPLE_IN_RANGE_MENU_SELECTION_3)
-    result = main_menu.get_user_action_selection()
-    assert result == main_menu.logout
-
-
-def test_skills_menu_selection(monkeypatch) -> None:
-    # prereq for test case is being logged in
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    monkeypatch.setattr('main_menu.get_user_selection', lambda: SAMPLE_IN_RANGE_MENU_SELECTION)
-    output = main_menu.learn_skills_menu()
-
-    assert output.out == "Under Construction"
-
-
-def test_skills_menu_selection_2(monkeypatch) -> None:
-    # prereq for test case is being logged in
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    monkeypatch.setattr('main_menu.get_user_selection', lambda: SAMPLE_OUT_OF_RANGE_MENU_SELECTION)
-    output = main_menu.learn_skills_menu()
-
-    assert output.out == "Invalid selection"
-
-
-# end tests for get_user_selection and learn_skills_menu
 
 def test_sixth_user_attempt(capsys, monkeypatch) -> None:
     monkeypatch.setattr('src.main', lambda: 'n')

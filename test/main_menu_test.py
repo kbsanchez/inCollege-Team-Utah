@@ -35,7 +35,7 @@ def test_main_menu_selection_under_construction(capsys):
     assert output.out == "Under Construction\n"
 
 
-def test_main_menu_selection_under_construction():
+def test_main_menu_selection_action():
     selection = 1
     def action(): return None
     main_menu.input = lambda _: selection
