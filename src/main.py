@@ -1,9 +1,9 @@
 import sqlite3
 from getpass import getpass
 
-from links_menu import LinksMenu
-from db_session import db
-from main_menu import main_menu
+from .links_menu import LinksMenu
+from .db_session import db
+from .main_menu import main_menu
 
 conn = db
 c = conn.cursor()
