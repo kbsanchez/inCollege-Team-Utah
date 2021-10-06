@@ -152,5 +152,22 @@ End of sprint 2 test cases
 """
 
 
+def test_useful_links_choice(capsys, monkeypatch) -> None:
+    called = False
+    inputs = iter(['u', 'q'])
+
+    def fake_useful_links():
+        nonlocal called
+        called = True
+
+    main.input = lambda _: next(inputs)
+    main.exit = lambda: ()
+
+    monkeypatch.setattr('src.main.usefulllinks', fake_useful_links)
+
+    main.main()
+    assert called
+
+
 def test_main() -> None:
     pass
