@@ -1,6 +1,6 @@
 #made a connection to main.py Username.db and added a function to count the jobs posted to enforce limit
 import sqlite3
-from links_menu import LinksMenu
+from .links_menu import LinksMenu
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()

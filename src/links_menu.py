@@ -1,6 +1,6 @@
-from menu import Menu
+from .menu import Menu
 from typing import Optional
-from db_session import db
+from .db_session import db
 from colorama import Fore, Style
 
 
