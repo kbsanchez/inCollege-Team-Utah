@@ -1,4 +1,4 @@
-.vscode/
-.pytest_cache/
-__pycache__/
 *.db
+ICU_env/
+**/__pycache__/
+.idea/
