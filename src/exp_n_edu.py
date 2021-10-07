@@ -1,5 +1,5 @@
 import sqlite3
-from db_session import db
+from .db_session import db
 
 
 conn = db
@@ -23,7 +23,7 @@ def get_user():
     c.execute(query)
     conn.commit()
     tuple = c.fetchone()
-    return tuple
+    return tuple[0]  # need to actually return the username and not the tuple
 
 
 #creates a table to store experience of user
@@ -61,7 +61,7 @@ def create_edu_table():
 #inserts data into new row in education table
 def edu_entry(username, schoolName, degree, yearsAttended):
     data = (username, schoolName, degree, yearsAttended)
-    query = """INSERT INTO Education(username, schoolName, degree, yearsAttended)"""
+    query = """INSERT INTO Education(username, schoolName, degree, yearsAttended) VALUES (?, ?, ?, ?)"""
     c.execute(query, data)
     conn.commit()
 
@@ -74,9 +74,8 @@ def get_user_selection():
 
 #menu that allows for user to add experience and/or education to their profile
 def exp_n_edu_menu():
-    choice = 0
     #testing_data_entry()
-    while choice != 3:
+    while True:
         print("\n1 - Add experience \n2 - Add education \n3 - Go back \n\n")
         selection = get_user_selection()
         #add experience
@@ -86,7 +85,7 @@ def exp_n_edu_menu():
             #checks if max per user has already been reached
             if user_exp == 3:
                 print("The maximum amount of experience have been added to your profile. Please come back again later.")
-                return
+                continue
             #user-inputted data
             username = get_user()
             title = input("Job title: ")
@@ -104,6 +103,9 @@ def exp_n_edu_menu():
             degree = input("Degree: ")
             yearsAttended = int(input("Years attended: "))
             edu_entry(username, schoolName, degree, yearsAttended)
+        # end loop
+        elif selection == 3:
+            break
         #input validation
         else:
             print("Invalid input. Please make a choice from the menu options.\n")
