@@ -34,22 +34,22 @@ class ProfileMenu(Menu):
         cursor.execute(query)
         result: Optional[Tuple] = cursor.fetchone()
 
-            self.username, self.firstname, self.lastname = result
-            query = """
-            SELECT * FROM Profile
-            WHERE username = ?
-            """
-            cursor.execute(query, (self.username, ))
-            result: Optional[Tuple] = cursor.fetchone()
+        self.username, self.firstname, self.lastname = result
+        query = """
+        SELECT * FROM Profile
+        WHERE username = ?
+        """
+        cursor.execute(query, (self.username, ))
+        result: Optional[Tuple] = cursor.fetchone()
 
         if result is None:
             return
 
         self.has_profile = True
-                self.username, self.user_title, self.user_major, \
-                self.user_university_name, self.user_about = result
-            self.read_education_db()
-            self.read_experience_db()
+        self.username, self.user_title, self.user_major, \
+            self.user_university_name, self.user_about = result
+        self.read_education_db()
+        self.read_experience_db()
 
         # title should be the user's name
         self.title = f"{self.firstname} {self.lastname}"
@@ -69,17 +69,17 @@ class ProfileMenu(Menu):
         query = """SELECT schoolName, degree, yearsAttended 
         FROM Education WHERE username=?"""
         cursor.execute(query, (self.username,))
-        self.user_education = cursor.fetchall()        
+        self.user_education = cursor.fetchall()
 
     def write_db(self) -> None:
         """write values to database"""
         cursor = db.cursor()
-        query: str = """INSERT OR REPLACE INTO 
-        Profile(username, title, major, universityName, about) 
+        query: str = """INSERT OR REPLACE INTO
+            Profile(username, title, major, universityName, about)
             VALUES(?, ?, ?, ?, ?)
             """
         cursor.execute(query, (self.username, self.user_title, self.user_major,
-        self.user_university_name, self.user_about))
+                               self.user_university_name, self.user_about))
         db.commit()
 
     def get_profile_text(self) -> str:
@@ -89,11 +89,11 @@ class ProfileMenu(Menu):
 
         # align text
         return f"{'Title:':<15}{self.user_title}\n" + \
-        f"{'Major:':<15}{self.user_major}\n" + \
-        f"{'University:':<15}{self.user_university_name}\n" + \
-        f"{'About:':<15}{self.user_about}\n" + \
+            f"{'Major:':<15}{self.user_major}\n" + \
+            f"{'University:':<15}{self.user_university_name}\n" + \
+            f"{'About:':<15}{self.user_about}\n" + \
             f"{'Experiences:':<15}\n{self.get_experience_text()}\n" + \
-        f"{'Education:':<15}\n{self.get_education_text()}\n"
+            f"{'Education:':<15}\n{self.get_education_text()}\n"
 
     def get_experience_text(self) -> str:
         """return well formatted string of user's experience data"""
@@ -103,7 +103,7 @@ class ProfileMenu(Menu):
         headers = ['Title', 'Employer', 'Start date',
                    'End date', 'Location', 'description']
         return columnar([list(experience) for experience in self.user_expeirences], headers, no_borders=True)
-    
+
     def get_education_text(self) -> str:
         """return well formatted string of user's education data"""
         if len(self.user_education) == 0:
@@ -126,4 +126,4 @@ class ProfileMenu(Menu):
     def run(self) -> None:
         self.read_db()
         super(ProfileMenu, self).run()
-        self.write_db()        
+        self.write_db()
