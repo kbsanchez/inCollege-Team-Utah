@@ -4,6 +4,7 @@ from .exp_n_edu import exp_n_edu_menu
 from typing import Optional, Tuple
 from columnar import columnar
 
+
 class ProfileMenu(Menu):
     def __init__(self) -> None:
         super().__init__()
@@ -18,7 +19,7 @@ class ProfileMenu(Menu):
         self.user_about = str()
         self.user_expeirences = list()
         self.user_education = list()
-        self.user_logedin = None
+        self.has_profile = False
 
         # Menu options
         self.options["Edit profile"] = self.edit_profile
@@ -32,7 +33,7 @@ class ProfileMenu(Menu):
         """
         cursor.execute(query)
         result: Optional[Tuple] = cursor.fetchone()
-        if result is not None:
+
             self.username, self.firstname, self.lastname = result
             query = """
             SELECT * FROM Profile
@@ -40,15 +41,15 @@ class ProfileMenu(Menu):
             """
             cursor.execute(query, (self.username, ))
             result: Optional[Tuple] = cursor.fetchone()
-            if result is not None:
-                self.logedin = True
+
+        if result is None:
+            return
+
+        self.has_profile = True
                 self.username, self.user_title, self.user_major, \
                 self.user_university_name, self.user_about = result
             self.read_education_db()
             self.read_experience_db()
-        else:
-            # user is not logged in
-            self.logedin = False
 
         self.title = f"{self.firstname} {self.lastname}"  # title should be the user's name
         self.subtitle = self.get_profile_text()
