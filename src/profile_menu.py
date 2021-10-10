@@ -51,7 +51,8 @@ class ProfileMenu(Menu):
             self.read_education_db()
             self.read_experience_db()
 
-        self.title = f"{self.firstname} {self.lastname}"  # title should be the user's name
+        # title should be the user's name
+        self.title = f"{self.firstname} {self.lastname}"
         self.subtitle = self.get_profile_text()
 
     def read_experience_db(self) -> None:
