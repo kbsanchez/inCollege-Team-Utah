@@ -76,8 +76,9 @@ class ProfileMenu(Menu):
         cursor = db.cursor()
         query: str = """INSERT OR REPLACE INTO 
         Profile(username, title, major, universityName, about) 
-        VALUES(?, ?, ?, ?, ?)"""
-        cursor.execute(query, (self.username, self.user_title, self.user_major, \
+            VALUES(?, ?, ?, ?, ?)
+            """
+        cursor.execute(query, (self.username, self.user_title, self.user_major,
         self.user_university_name, self.user_about))
         db.commit()
 
