@@ -89,16 +89,23 @@ class ProfileMenu(Menu):
         f"{'Major:':<15}{self.user_major}\n" + \
         f"{'University:':<15}{self.user_university_name}\n" + \
         f"{'About:':<15}{self.user_about}\n" + \
-        f"{'Experiences:':<15}\n{self.get_experience_text()}\n"+ \
+            f"{'Experiences:':<15}\n{self.get_experience_text()}\n" + \
         f"{'Education:':<15}\n{self.get_education_text()}\n"
 
     def get_experience_text(self) -> str:
         """return well formatted string of user's experience data"""
-        headers = ['Title', 'Employer', 'Start date', 'End date', 'Location', 'description']
+        if len(self.user_expeirences) == 0:
+            return "None"
+
+        headers = ['Title', 'Employer', 'Start date',
+                   'End date', 'Location', 'description']
         return columnar([list(experience) for experience in self.user_expeirences], headers, no_borders=True)
     
     def get_education_text(self) -> str:
         """return well formatted string of user's education data"""
+        if len(self.user_education) == 0:
+            return "None"
+
         headers = ['School name', 'Degree', 'Years attended']
         return columnar([list(education) for education in self.user_education], headers, no_borders=True)
 
