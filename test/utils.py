@@ -1,4 +1,12 @@
 import sqlite3
+from .context import db_session
+
+
+def get_mock_db():
+    mock_db = sqlite3.connect(':memory:')
+    db_session.create_tables(mock_db)
+
+    return mock_db
 
 
 def populate_db(db: sqlite3.Connection, username: str = None, password: str = None) -> None:
