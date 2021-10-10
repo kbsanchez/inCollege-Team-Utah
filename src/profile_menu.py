@@ -118,10 +118,10 @@ class ProfileMenu(Menu):
         self.user_major = input("Enter major: ").title()
         self.user_university_name = input("Enter univeristy name: ").title()
         self.user_about = input("Enter about: ")
-        exp_n_edu_menu() # get experiences and education
+        exp_n_edu_menu()  # get experiences and education
         self.read_experience_db()  # update experiences info
         self.read_education_db()  # update education info
-        self.subtitle = self.get_profile_text() # update profile
+        self.subtitle = self.get_profile_text()  # update profile
 
     def run(self) -> None:
         self.read_db()
