@@ -23,6 +23,12 @@ def db_init(clean: bool = False) -> sqlite3.Connection:
 
     # create database
     db = sqlite3.connect(DB_PATH)
+    create_tables(db)
+
+    return db
+
+
+def create_tables(db):
     cursor = db.cursor()
 
     # Initialize database with setup file
@@ -31,7 +37,6 @@ def db_init(clean: bool = False) -> sqlite3.Connection:
     cursor.executescript(setup_queries)
 
     db.commit()
-    return db
 
 
 db_init()
