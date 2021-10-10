@@ -4,6 +4,7 @@ from .exp_n_edu import exp_n_edu_menu
 from typing import Optional, Tuple
 from columnar import columnar
 
+
 class ProfileMenu(Menu):
     def __init__(self) -> None:
         super().__init__()
@@ -18,7 +19,7 @@ class ProfileMenu(Menu):
         self.user_about = str()
         self.user_expeirences = list()
         self.user_education = list()
-        self.user_logedin = None
+        self.has_profile = False
 
         # Menu options
         self.options["Edit profile"] = self.edit_profile
@@ -32,25 +33,26 @@ class ProfileMenu(Menu):
         """
         cursor.execute(query)
         result: Optional[Tuple] = cursor.fetchone()
-        if result is not None:
-            self.username, self.firstname, self.lastname = result
-            query = """
-            SELECT * FROM Profile
-            WHERE username = ?
-            """
-            cursor.execute(query, (self.username, ))
-            result: Optional[Tuple] = cursor.fetchone()
-            if result is not None:
-                self.logedin = True
-                self.username, self.user_title, self.user_major, \
-                self.user_university_name, self.user_about = result
-            self.read_education_db()
-            self.read_experience_db()
-        else:
-            # user is not logged in
-            self.logedin = False
 
-        self.title = f"{self.firstname} {self.lastname}"  # title should be the user's name
+        self.username, self.firstname, self.lastname = result
+        query = """
+        SELECT * FROM Profile
+        WHERE username = ?
+        """
+        cursor.execute(query, (self.username, ))
+        result: Optional[Tuple] = cursor.fetchone()
+
+        if result is None:
+            return
+
+        self.has_profile = True
+        self.username, self.user_title, self.user_major, \
+            self.user_university_name, self.user_about = result
+        self.read_education_db()
+        self.read_experience_db()
+
+        # title should be the user's name
+        self.title = f"{self.firstname} {self.lastname}"
         self.subtitle = self.get_profile_text()
 
     def read_experience_db(self) -> None:
@@ -67,35 +69,46 @@ class ProfileMenu(Menu):
         query = """SELECT schoolName, degree, yearsAttended 
         FROM Education WHERE username=?"""
         cursor.execute(query, (self.username,))
-        self.user_education = cursor.fetchall()        
+        self.user_education = cursor.fetchall()
 
     def write_db(self) -> None:
         """write values to database"""
         cursor = db.cursor()
-        query: str = """INSERT OR REPLACE INTO 
-        Profile(username, title, major, universityName, about) 
-        VALUES(?, ?, ?, ?, ?)"""
-        cursor.execute(query, (self.username, self.user_title, self.user_major, \
-        self.user_university_name, self.user_about))
+        query: str = """INSERT OR REPLACE INTO
+            Profile(username, title, major, universityName, about)
+            VALUES(?, ?, ?, ?, ?)
+            """
+        cursor.execute(query, (self.username, self.user_title, self.user_major,
+                               self.user_university_name, self.user_about))
         db.commit()
 
     def get_profile_text(self) -> str:
         """string form of user's profile data"""
+        if not self.has_profile:
+            return "No profile set up!"
+
         # align text
         return f"{'Title:':<15}{self.user_title}\n" + \
-        f"{'Major:':<15}{self.user_major}\n" + \
-        f"{'University:':<15}{self.user_university_name}\n" + \
-        f"{'About:':<15}{self.user_about}\n" + \
-        f"{'Experiences:':<15}\n{self.get_experience_text()}\n"+ \
-        f"{'Education:':<15}\n{self.get_education_text()}\n"
+            f"{'Major:':<15}{self.user_major}\n" + \
+            f"{'University:':<15}{self.user_university_name}\n" + \
+            f"{'About:':<15}{self.user_about}\n" + \
+            f"{'Experiences:':<15}\n{self.get_experience_text()}\n" + \
+            f"{'Education:':<15}\n{self.get_education_text()}\n"
 
     def get_experience_text(self) -> str:
         """return well formatted string of user's experience data"""
-        headers = ['Title', 'Employer', 'Start date', 'End date', 'Location', 'description']
+        if len(self.user_expeirences) == 0:
+            return "None"
+
+        headers = ['Title', 'Employer', 'Start date',
+                   'End date', 'Location', 'description']
         return columnar([list(experience) for experience in self.user_expeirences], headers, no_borders=True)
-    
+
     def get_education_text(self) -> str:
         """return well formatted string of user's education data"""
+        if len(self.user_education) == 0:
+            return "None"
+
         headers = ['School name', 'Degree', 'Years attended']
         return columnar([list(education) for education in self.user_education], headers, no_borders=True)
 
@@ -105,12 +118,12 @@ class ProfileMenu(Menu):
         self.user_major = input("Enter major: ").title()
         self.user_university_name = input("Enter univeristy name: ").title()
         self.user_about = input("Enter about: ")
-        exp_n_edu_menu() # get experiences and education
+        exp_n_edu_menu()  # get experiences and education
         self.read_experience_db()  # update experiences info
         self.read_education_db()  # update education info
-        self.subtitle = self.get_profile_text() # update profile
+        self.subtitle = self.get_profile_text()  # update profile
 
     def run(self) -> None:
         self.read_db()
         super(ProfileMenu, self).run()
-        self.write_db()        
+        self.write_db()
