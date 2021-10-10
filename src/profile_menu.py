@@ -84,6 +84,9 @@ class ProfileMenu(Menu):
 
     def get_profile_text(self) -> str:
         """string form of user's profile data"""
+        if not self.has_profile:
+            return "No profile set up!"
+
         # align text
         return f"{'Title:':<15}{self.user_title}\n" + \
         f"{'Major:':<15}{self.user_major}\n" + \
