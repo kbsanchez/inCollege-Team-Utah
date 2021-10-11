@@ -180,7 +180,7 @@ def usefulllinks():
 def createnewacc():
     create_table()
     capacity = number_rows()
-    if capacity < 5:
+    if capacity < 10:
         print("\n")
         print("Please input a unique username and password")
         username = input("Username: ")
@@ -191,8 +191,8 @@ def createnewacc():
         logedin = 0
         check_pw(password)
         data_entry(username2, password, first_name, last_name, logedin)
-    elif capacity == 5:
-        print("The amount of allowed accounts (5) has been reached")
+    elif capacity == 10:
+        print("The amount of allowed accounts (10) has been reached")
 
 
 # CHOICE IS A CHAR THAT HELPS NAVIGATE THROUGH THE PROGRAM MENU
