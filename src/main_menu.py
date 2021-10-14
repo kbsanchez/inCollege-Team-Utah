@@ -2,6 +2,7 @@
 import sqlite3
 from .links_menu import LinksMenu
 from .profile_menu import ProfileMenu
+from .friends import read_friend_requests
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
@@ -150,7 +151,10 @@ def get_user_action_selection():
 #MAIN MENU FUNCTION THAT CALLS ALL THE OTHER MISCELANIOUS MENU FUNCTIONS
 def main_menu():
 
+    #user = get_user()
+
     while True:
+        #read_friend_requests(user)
         print("\n")
         print_menu_options()
         print("\n")

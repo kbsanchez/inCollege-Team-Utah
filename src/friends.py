@@ -1,6 +1,5 @@
-import sqlite3
 from .db_session import db
-from .main_menu import get_user, get_user_selection
+from .main_menu import get_user
 
 conn = db
 c = conn.cursor()
@@ -46,24 +45,33 @@ def accept_request(username, requestedUser):
 
 
 #reads data from friends table
-def read_friend_requests():
-    friendRequests = []
-    user = get_user()
-    query = """SELECT userOne, userRequested, request FROM Friends WHERE request = 1 AND userRequested = ?"""
+def read_friend_requests(user):
+    myFriendRequests = []
+    query = """SELECT userOne FROM Friends WHERE request = 1 AND userRequested = ?"""
     for student in c.execute(query, user):
-        friendRequests.append(student)
+        myFriendRequests.append(student)
+    if(len(myFriendRequests) > 0):
+        print("You have " + str(len(myFriendRequests)) + " new friend requests from ")
+        for request in range(len(myFriendRequests)):
+            print(request, end=" ")
 
 
-#in progress: populate friends list
+#generate friends list
 def my_friends_list():
     friendsList = []
+    friendsTableList = [["", "", 0]]
     user = get_user()
-    cursor = db.cursor()
-    query = """SELECT userOne, userRequested, request FROM Friends WHERE request = 2"""
-    selectUserOneQuery = """SELECT userOne FROM Friends WHERE request = 2"""
-    selectUserTwoQuery = """SELECT userRequested FROM Friends WHERE request = 2"""
-    for row in c.execute(query):
-        return
 
+    #creates list of all rows where current logged in user appears
+    query = """SELECT userOne, userRequested, request FROM Friends WHERE request = 2"""
+    for row in c.execute(query):
+        friendsTableList.append(row)
+
+    #filters user that the logged in user is friends with into a different list
+    for i in range(len(friendsTableList)):
+        if (user == friendsTableList[i][1]):
+            friendsList.append(friendsTableList[i][2])
+        elif (user == friendsTableList[i][2]):
+            friendsList.append(friendsTableList[i][1])
 
 
