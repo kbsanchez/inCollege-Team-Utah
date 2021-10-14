@@ -1,5 +1,6 @@
 from .db_session import db
 from .main_menu import get_user
+from typing import Optional
 
 conn = db
 c = conn.cursor()
@@ -18,6 +19,41 @@ def friends_entry(userOne, userRequested, request):
     query = """INSERT INTO Friends(userOne, userRequested, request) VALUES (?,?,?)"""
     c.execute(query, data)
     conn.commit()
+
+
+#returns username of student that a user searches for to send a friend request if it matches a user within the inCollege system.
+def search_for_user():
+    choice = 0
+    while(choice != 4):
+        choice = int(input("1. Search by last name \n"
+                       "2. Search by university \n"
+                       "3. Search by major \n"
+                       "4. Go back\n"
+                       "Please make a selection: "))
+
+        if(choice == 1):
+            lastName = input("Enter a student's last name: ")
+            query = """SELECT username FROM Username WHERE lastname = ?"""
+            c.execute(query, lastName)
+            result: Optional[tuple] = c.fetchone()
+        elif(choice == 2):
+            university = input("Enter a student's university: ")
+            query = """SELECT username FROM Profile WHERE universityName = ?"""
+            c.execute(query, university)
+            result: Optional[tuple] = c.fetchone()
+        elif(choice == 3):
+            major = input("Enter a student's major: ")
+            query = """SELECT username FROM Profile WHERE major = ?"""
+            c.execute(query, major)
+            result: Optional[tuple] = c.fetchone()
+        elif(choice == 4):
+            return
+
+        if result is None:
+            print("There are no students registered with that data. ")
+            return
+        else:
+            return result
 
 
 #updates key in friends table to send a request to another user to become friends
