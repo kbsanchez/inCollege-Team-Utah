@@ -105,9 +105,9 @@ def my_friends_list():
 
     #filters user that the logged in user is friends with into a different list
     for i in range(len(friendsTableList)):
-        if (user == friendsTableList[i][1]):
-            friendsList.append(friendsTableList[i][2])
-        elif (user == friendsTableList[i][2]):
+        if (user == friendsTableList[i][0]):
             friendsList.append(friendsTableList[i][1])
+        elif (user == friendsTableList[i][1]):
+            friendsList.append(friendsTableList[i][0])
 
 
