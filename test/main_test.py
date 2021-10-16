@@ -95,19 +95,19 @@ def test_check_pw(capsys) -> None:
     output = capsys.readouterr()
     assert output.out == "Password must contain at least one alphanumeric symbol\n"
 
-#
-# def test_number_rows() -> None:
-#     populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-#     rows: int = main.number_rows()
-#     assert rows == 1
-#
-#     populate_db(test_db, SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
-#     rows = main.number_rows()
-#     assert rows == 2
-#
-#
+
+def test_number_rows() -> None:
+    add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+    rows: int = main.number_rows()
+    assert rows == 1
+
+    add_user(test_db, SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
+    rows = main.number_rows()
+    assert rows == 2
+
+
 # def test_login_attempt(capsys) -> None:
-#     populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+#     add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
 #     main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
 #     output = capsys.readouterr()
 #     assert output.out == "You have successfully logged in\n"
@@ -115,29 +115,30 @@ def test_check_pw(capsys) -> None:
 #     main.login_attempt(SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
 #     output = capsys.readouterr()
 #     assert output.out == "Incorrect username/password, please try again\n"
-#
-#
-# def test_sixth_user_attempt(capsys, monkeypatch) -> None:
-#     monkeypatch.setattr('src.main', lambda: 'n')
-#     main.main()
-#     output = capsys.readouterr()
-#     assert output.out == "The amount of allowed accounts (5) has been reached"
-#
-#
-# """
-# End of sprint 1 test cases, beginning of sprint 2 cases
-# """
-#
-#
-# def test_find_in_db(capsys) -> None:
-#     populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD, SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
-#     main.find_in_db(SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
-#     output = capsys.readouterr()
-#     assert output.out == "They are a part of the InCollege system"
-#
-#     main.find_in_db(SAMPLE_UNREGISTERED_FIRSTNAME, SAMPLE_UNREGISTERED_LASTNAME)
-#     output = capsys.readouterr()
-#     assert output.out == "They are not yet a part of the InCollege system yet"
+
+
+def test_create_new_account_with_max(capsys, monkeypatch) -> None:
+    max_users = 10
+    monkeypatch.setattr('src.main.number_rows', lambda: max_users)
+    main.createnewacc()
+    output = capsys.readouterr()
+    assert output.out == f"The amount of allowed accounts ({max_users}) has been reached\n"
+
+
+"""
+End of sprint 1 test cases, beginning of sprint 2 cases
+"""
+
+
+def test_find_in_db(capsys) -> None:
+    add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD, SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
+    main.find_in_db(SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
+    output = capsys.readouterr()
+    assert output.out == "They are a part of the InCollege system\n"
+
+    main.find_in_db(SAMPLE_UNREGISTERED_FIRSTNAME, SAMPLE_UNREGISTERED_LASTNAME)
+    output = capsys.readouterr()
+    assert output.out == "They are not yet a part of the InCollege system yet\n"
 #
 #
 # def test_video_feature(capsys, monkeypatch) -> None:
@@ -145,29 +146,25 @@ def test_check_pw(capsys) -> None:
 #     main.main()
 #     output = capsys.readouterr()
 #     assert output.out == "video is now playing"
-#
-#
-# """
-# End of sprint 2 test cases
-# """
-#
-#
-# def test_useful_links_choice(capsys, monkeypatch) -> None:
-#     called = False
-#     inputs = iter(['u', 'q'])
-#
-#     def fake_useful_links():
-#         nonlocal called
-#         called = True
-#
-#     main.input = lambda _: next(inputs)
-#     main.exit = lambda: ()
-#
-#     monkeypatch.setattr('src.main.usefulllinks', fake_useful_links)
-#
-#     main.main()
-#     assert called
-#
-#
-# def test_main() -> None:
-#     pass
+
+
+"""
+End of sprint 2 test cases
+"""
+
+
+def test_useful_links_choice(capsys, monkeypatch) -> None:
+    called = False
+    inputs = iter(['u', 'q'])
+
+    def fake_useful_links():
+        nonlocal called
+        called = True
+
+    main.input = lambda _: next(inputs)
+    main.exit = lambda: ()
+
+    monkeypatch.setattr('src.main.usefulllinks', fake_useful_links)
+
+    main.main()
+    assert called
