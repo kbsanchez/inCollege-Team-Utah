@@ -1,6 +1,6 @@
 from . import main_test
 from .context import profile_menu, main
-from .utils import populate_db, get_mock_db
+from .utils import add_user, get_mock_db
 from .context import db_session
 import pytest
 
@@ -20,7 +20,7 @@ def run_around_tests(monkeypatch) -> None:
     monkeypatch.setattr('src.main.conn', mock_db)
     monkeypatch.setattr('src.main.c', mock_db.cursor())
 
-    utils.populate_db(mock_db, USERNAME, PASSWORD)
+    utils.add_user(mock_db, USERNAME, PASSWORD)
     main.login(USERNAME)
 
     yield  # test runs

@@ -9,3 +9,4 @@ from src import main_menu
 from src import links_menu
 from src import profile_menu
 from src import db_session
+from src import friends

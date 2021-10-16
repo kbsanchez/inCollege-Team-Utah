@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS Profile(
     username TEXT PRIMARY KEY,
     title TEXT, 
     major TEXT,
-    universityName,
-    about
+    universityName TEXT,
+    about TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Experience(username TEXT, title TEXT, employer TEXT, startDate TEXT, endDate TEXT, location TEXT, description TEXT);
