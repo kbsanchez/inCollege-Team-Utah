@@ -1,17 +1,9 @@
 from .db_session import db
+from .main_menu import get_user
 from typing import Optional
 
 conn = db
 c = conn.cursor()
-
-
-def get_user():
-    query = """SELECT username FROM Username WHERE logedin = 1"""
-    c.execute(query)
-    conn.commit()
-    result = c.fetchone()
-    return result[0] if result is not None else None
-
 
 #creates table for friends
 #request key: 0- No request sent/ Request declined. 1- Request sent but not yet accepted/declined. 2- Request accepted/friends
@@ -32,7 +24,6 @@ def friends_entry(userOne, userRequested, request):
 #returns username of student that a user searches for to send a friend request if it matches a user within the inCollege system.
 def search_for_user():
     choice = 0
-    result = None
     while(choice != 4):
         choice = int(input("1. Search by last name \n"
                        "2. Search by university \n"
@@ -43,17 +34,17 @@ def search_for_user():
         if(choice == 1):
             lastName = input("Enter a student's last name: ")
             query = """SELECT username FROM Username WHERE lastname = ?"""
-            c.execute(query, (lastName,))
+            c.execute(query, lastName)
             result: Optional[tuple] = c.fetchone()
         elif(choice == 2):
             university = input("Enter a student's university: ")
             query = """SELECT username FROM Profile WHERE universityName = ?"""
-            c.execute(query, (university,))
+            c.execute(query, university)
             result: Optional[tuple] = c.fetchone()
         elif(choice == 3):
             major = input("Enter a student's major: ")
             query = """SELECT username FROM Profile WHERE major = ?"""
-            c.execute(query, (major,))
+            c.execute(query, major)
             result: Optional[tuple] = c.fetchone()
         elif(choice == 4):
             return
@@ -62,7 +53,7 @@ def search_for_user():
             print("There are no students registered with that data. ")
             return
         else:
-            return result[0]
+            return result
 
 
 #updates key in friends table to send a request to another user to become friends
@@ -93,12 +84,12 @@ def accept_request(username, requestedUser):
 def read_friend_requests(user):
     myFriendRequests = []
     query = """SELECT userOne FROM Friends WHERE request = 1 AND userRequested = ?"""
-    for student in c.execute(query, (user,)):
+    for student in c.execute(query, user):
         myFriendRequests.append(student)
     if(len(myFriendRequests) > 0):
         print("You have " + str(len(myFriendRequests)) + " new friend requests from ")
-        for request in myFriendRequests:
-            print(request[0], end=" ")
+        for request in range(len(myFriendRequests)):
+            print(request, end=" ")
 
 
 #generate friends list
@@ -118,5 +109,18 @@ def my_friends_list():
             friendsList.append(friendsTableList[i][1])
         elif (user == friendsTableList[i][1]):
             friendsList.append(friendsTableList[i][0])
-    return friendsList
+
+#delete friend from list
+def delete_my_friends(friend):
+    query = """DELETE FROM Friends WHERE user = friend"""
+    for row in c.execute(query):
+        my_friends_list().friendsTableList.delete(row)
+
+def show_my_network():
+    for i in range(len(my_friends_list().friendsTableList)):
+        print(my_friends_list().friendsTableList[i][i])
+
+    user_to_delete = input("If you would like to delete anyone from your list, type their name: ")
+    delete_my_friends(user_to_delete)
+    
 
