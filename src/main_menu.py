@@ -2,7 +2,6 @@
 import sqlite3
 from .links_menu import LinksMenu
 from .profile_menu import ProfileMenu
-from .friends import read_friend_requests
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
