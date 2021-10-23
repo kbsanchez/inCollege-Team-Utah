@@ -40,6 +40,11 @@ def job_entry(username, title, description, employer, location, salary):
     conn.commit()
 #
 
+def job_deletion(username, title, description, employer, location, salary):
+    data = (username, title, description, employer, location, salary)
+    query = """DELETE Jobs(username,title,description,employer,location,salary) VAlUES(?,?,?,?,?,?);"""
+    c.execute(query,data)
+    conn.commit()
 
 def get_user_selection():
     selection_text = input("Please make a choice from the menu: ")
@@ -60,7 +65,7 @@ def job_intern_menu():
         if selection == 1:
             create_job_table()
             jobs_posted = number_job_rows()
-            if jobs_posted == 5:
+            if jobs_posted == 10:
                 print("The maximum amount of jobs posted have been reached. Please come back again later.")
                 return
             job_title = input("Job Title: ")
