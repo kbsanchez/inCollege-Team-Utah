@@ -1,6 +1,7 @@
 #made a connection to main.py Username.db and added a function to count the jobs posted to enforce limit
 import sqlite3
 from .links_menu import LinksMenu
+from .profile_menu import ProfileMenu
 
 conn = sqlite3.connect('Username.db')
 c = conn.cursor()
@@ -15,7 +16,7 @@ def number_job_rows():
 
 #retrieves username of logged in person
 def get_user():
-    query = """SELECT * FROM Username WHERE logedin = 1"""
+    query = """SELECT username FROM Username WHERE logedin = 1"""
     c.execute(query)
     conn.commit()
     tuple = c.fetchone()
@@ -66,8 +67,7 @@ def job_intern_menu():
             employer = input("Employer: ")
             location = input("Location: ")
             salary = input("Salary: ")
-            username = get_user()
-            username2 = username[1]
+            username ,= get_user()
             job_entry(username,job_title,job_description,employer,location,salary)
         elif selection == 2:
             return
@@ -110,6 +110,7 @@ def logout():
 print()
 #MENU SHOWN AFTER YOU SUCCESFULLY LOGIN
 optionsAndActions = [
+    ("View/Edit Profile", ProfileMenu().run),
     ("Job/Internship Search", job_intern_menu),
     ("Find Someone You Know", None),
     ("Learn a New Skill", learn_skills_menu),
@@ -149,7 +150,10 @@ def get_user_action_selection():
 #MAIN MENU FUNCTION THAT CALLS ALL THE OTHER MISCELANIOUS MENU FUNCTIONS
 def main_menu():
 
+    #user = get_user()
+
     while True:
+        #read_friend_requests(user)
         print("\n")
         print_menu_options()
         print("\n")

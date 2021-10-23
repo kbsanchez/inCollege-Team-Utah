@@ -87,7 +87,7 @@ class GuestControlsMenu(Menu):
         self.has_email: Optional[bool] = True
         self.has_sms: Optional[bool] = True
         self.has_marketing: Optional[bool] = True
-        self.loggedIn: Optional[bool] = False
+        self.logedin: Optional[bool] = False
 
         # menu options
         self.options["Toggle InCollege Email"] = self._toggle_email
@@ -97,26 +97,21 @@ class GuestControlsMenu(Menu):
     def read_db(self) -> None:
         """read values from database"""
         cursor = db.cursor()
-        query: str = "SELECT username, email, sms, marketing FROM user WHERE loggedIn=1;"
+        query: str = "SELECT username, email, sms, marketing FROM Username WHERE logedin=1;"
         cursor.execute(query)
         result = cursor.fetchone()
         if result is not None:
             self.username, self.has_email, self.has_sms, self.has_marketing = result
-            self.loggedIn = True
+            self.logedin = True
         else:
             # user is not signed in
-            self.loggedIn = False
-
-        print("Read User name: ", self.username)
-        print(f"has email {self.has_email}, sms {self.has_sms}, marketing {self.has_marketing}")
+            self.logedin = False
 
     def write_db(self):
         """write values to database"""
         cursor = db.cursor()
-        query: str = "UPDATE user SET email=?, sms=?, marketing=? WHERE username=?;"
+        query: str = "UPDATE Username SET email=?, sms=?, marketing=? WHERE username=?;"
         cursor.execute(query, (self.has_email, self.has_sms, self.has_marketing, self.username))
-        print("Write User name: ", self.username)
-        print(f"has email {self.has_email}, sms {self.has_sms}, marketing {self.has_marketing}")
         db.commit()
 
     def _toggle_email(self) -> False:
@@ -126,12 +121,12 @@ class GuestControlsMenu(Menu):
 
     def _toggle_sms(self):
         self.has_sms ^= 1
-        status = "on" if self.has_email else "off"
+        status = "on" if self.has_sms else "off"
         print(f"{Fore.GREEN}SMS switched {status} {Style.RESET_ALL}\n")
 
     def _toggle_marketing(self):
         self.has_marketing ^= 1
-        status = "on" if self.has_email else "off"
+        status = "on" if self.has_marketing else "off"
         print(f"{Fore.GREEN}Targeted marketing switched {status} {Style.RESET_ALL}\n")        
 
     def run(self) -> None:
@@ -148,7 +143,7 @@ class LanguagesMenu(Menu):
         # database variables
         self.username: str = str()
         self.language: str = str()
-        self.loggedIn: Optional[bool] = None
+        self.logedin: Optional[bool] = None
 
         # menu options
         self.options["English"] = self._set_lang_english  # TODO Joseph 9/29: abstract
@@ -157,19 +152,19 @@ class LanguagesMenu(Menu):
     def read_db(self) -> None:
         """read values from database"""
         cursor = db.cursor()
-        query: str = "SELECT username, language FROM user WHERE loggedIn=1;"
+        query: str = "SELECT Username, language FROM Username WHERE logedin=1;"
         cursor.execute(query)
         result = cursor.fetchone()
         if result is not None:
             self.username, self.language = result
-            self.loggedIn = True
+            self.logedin = True
         else:
-            self.loggedIn = False
+            self.logedin = False
 
     def write_db(self):
         """write values to database"""
         cursor = db.cursor()
-        query: str = "UPDATE user SET language=? WHERE username=?;"
+        query: str = "UPDATE Username SET language=? WHERE username=?;"
         cursor.execute(query, (self.language, self.username))
         db.commit()
 

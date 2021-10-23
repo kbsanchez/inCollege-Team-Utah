@@ -12,7 +12,17 @@ c = conn.cursor()
 
 
 def create_table():
-    query = """CREATE TABLE IF NOT EXISTS Username(username TEXT, password TEXT,firstname TEXT, lastname TEXT, logedin INTEGER)"""
+    query = """CREATE TABLE IF NOT EXISTS Username(
+    username TEXT PRIMARY KEY,
+    password TEXT,
+    firstname TEXT,
+    lastname TEXT,
+    logedin NOT NULL CHECK (logedin IN (0, 1)) DEFAULT 0,
+    email BOOLEAN NOT NULL CHECK (email IN (0, 1)) DEFAULT 1,
+    sms BOOLEAN NOT NULL CHECK (sms IN (0, 1)) DEFAULT 1,
+    marketing BOOLEAN NOT NULL CHECK (marketing IN (0, 1)) DEFAULT 1,
+    language TEXT DEFAULT 'english'
+);"""
     c.execute(query)
     conn.commit()
 
@@ -170,7 +180,7 @@ def usefulllinks():
 def createnewacc():
     create_table()
     capacity = number_rows()
-    if capacity < 5:
+    if capacity < 10:
         print("\n")
         print("Please input a unique username and password")
         username = input("Username: ")
@@ -181,8 +191,8 @@ def createnewacc():
         logedin = 0
         check_pw(password)
         data_entry(username2, password, first_name, last_name, logedin)
-    elif capacity == 5:
-        print("The amount of allowed accounts (5) has been reached")
+    elif capacity == 10:
+        print("The amount of allowed accounts (10) has been reached")
 
 
 # CHOICE IS A CHAR THAT HELPS NAVIGATE THROUGH THE PROGRAM MENU

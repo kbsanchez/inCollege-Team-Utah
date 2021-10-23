@@ -2,7 +2,7 @@ import pytest
 import sqlite3
 from typing import Union
 from test.context import main, main_menu
-from test.utils import populate_db
+from test.utils import add_user
 
 """
 Beginning of tests for sprint #1
@@ -51,8 +51,8 @@ def test_create_table() -> None:
 
 
 def test_data_entry() -> None:
-    populate_db(test_db)
-    main.data_entry(SAMPLE_USERNAME, SAMPLE_PASSWORD, SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
+    add_user(test_db)
+    main.data_entry(SAMPLE_USERNAME, SAMPLE_PASSWORD, SAMPLE_FIRSTNAME, SAMPLE_LASTNAME, 0)
     cursor: sqlite3.Cursor = test_db.cursor()
     query: str = "SELECT * FROM Username WHERE username = ?;"
     cursor.execute(query, (SAMPLE_USERNAME,))
@@ -60,7 +60,7 @@ def test_data_entry() -> None:
 
 
 def test_look_value(capsys) -> None:
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+    add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
     main.input = lambda x: SAMPLE_UNREGISTERED_USERNAME  # to mock input
     result = main.look_value(SAMPLE_USERNAME)
     output = capsys.readouterr()
@@ -97,31 +97,32 @@ def test_check_pw(capsys) -> None:
 
 
 def test_number_rows() -> None:
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+    add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
     rows: int = main.number_rows()
     assert rows == 1
 
-    populate_db(test_db, SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
+    add_user(test_db, SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
     rows = main.number_rows()
     assert rows == 2
 
 
-def test_login_attempt(capsys) -> None:
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
-    output = capsys.readouterr()
-    assert output.out == "You have successfully logged in\n"
+# def test_login_attempt(capsys) -> None:
+#     add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD)
+#     main.login_attempt(SAMPLE_USERNAME, SAMPLE_PASSWORD)
+#     output = capsys.readouterr()
+#     assert output.out == "You have successfully logged in\n"
+#
+#     main.login_attempt(SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
+#     output = capsys.readouterr()
+#     assert output.out == "Incorrect username/password, please try again\n"
 
-    main.login_attempt(SAMPLE_UNREGISTERED_USERNAME, SAMPLE_UNREGISTERED_PASSWORD)
-    output = capsys.readouterr()
-    assert output.out == "Incorrect username/password, please try again\n"
 
-
-def test_sixth_user_attempt(capsys, monkeypatch) -> None:
-    monkeypatch.setattr('src.main', lambda: 'n')
-    main.main()
+def test_create_new_account_with_max(capsys, monkeypatch) -> None:
+    max_users = 10
+    monkeypatch.setattr('src.main.number_rows', lambda: max_users)
+    main.createnewacc()
     output = capsys.readouterr()
-    assert output.out == "The amount of allowed accounts (5) has been reached"
+    assert output.out == f"The amount of allowed accounts ({max_users}) has been reached\n"
 
 
 """
@@ -130,21 +131,21 @@ End of sprint 1 test cases, beginning of sprint 2 cases
 
 
 def test_find_in_db(capsys) -> None:
-    populate_db(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD, SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
+    add_user(test_db, SAMPLE_USERNAME, SAMPLE_PASSWORD, SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
     main.find_in_db(SAMPLE_FIRSTNAME, SAMPLE_LASTNAME)
     output = capsys.readouterr()
-    assert output.out == "They are a part of the InCollege system"
+    assert output.out == "They are a part of the InCollege system\n"
 
     main.find_in_db(SAMPLE_UNREGISTERED_FIRSTNAME, SAMPLE_UNREGISTERED_LASTNAME)
     output = capsys.readouterr()
-    assert output.out == "They are not yet a part of the InCollege system yet"
-
-
-def test_video_feature(capsys, monkeypatch) -> None:
-    monkeypatch.setattr('src.main', lambda: 's')
-    main.main()
-    output = capsys.readouterr()
-    assert output.out == "video is now playing"
+    assert output.out == "They are not yet a part of the InCollege system yet\n"
+#
+#
+# def test_video_feature(capsys, monkeypatch) -> None:
+#     monkeypatch.setattr('src.main', lambda: 's')
+#     main.main()
+#     output = capsys.readouterr()
+#     assert output.out == "video is now playing"
 
 
 """
@@ -167,7 +168,3 @@ def test_useful_links_choice(capsys, monkeypatch) -> None:
 
     main.main()
     assert called
-
-
-def test_main() -> None:
-    pass

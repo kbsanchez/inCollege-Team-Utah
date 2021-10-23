@@ -26,12 +26,12 @@ def test_main_menu_selection_fails_if_value_too_low(capsys):
 def test_main_menu_selection_under_construction(capsys):
     selection = 1
     main_menu.input = lambda _: selection
-    main_menu.optionsAndActions[selection] = (None, None)
+    main_menu.optionsAndActions[selection-1] = (None, None)
 
     result = main_menu.get_user_action_selection()
     output = capsys.readouterr()
 
-    assert result == None
+    assert result is None
     assert output.out == "Under Construction\n"
 
 
