@@ -159,11 +159,7 @@ def job_intern_menu():
             salary = input("Salary: ")
 
 
-<< << << < HEAD
-            username, = get_user()
-== == == =
             username = get_user()
->>>>>> > Update main_menu.py
             job_entry(username, job_title, job_description,
                       employer, location, salary)
 
