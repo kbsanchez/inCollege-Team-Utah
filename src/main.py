@@ -3,7 +3,7 @@ from getpass import getpass
 
 from .links_menu import LinksMenu
 from .db_session import db
-from .main_menu import main_menu
+from .main_menu import find_deleted_appl, main_menu
 
 conn = db
 c = conn.cursor()
@@ -18,6 +18,7 @@ def create_table():
     firstname TEXT,
     lastname TEXT,
     logedin NOT NULL CHECK (logedin IN (0, 1)) DEFAULT 0,
+    applnumber INTEGER DEFAULT 0,
     email BOOLEAN NOT NULL CHECK (email IN (0, 1)) DEFAULT 1,
     sms BOOLEAN NOT NULL CHECK (sms IN (0, 1)) DEFAULT 1,
     marketing BOOLEAN NOT NULL CHECK (marketing IN (0, 1)) DEFAULT 1,
@@ -224,7 +225,7 @@ def main():
             previous_page = input("please enter to the previous page")
         if choice == 's':
             print("video is now playing")
-            Previous_page=input("press enter to the previous page")
+            Previous_page = input("press enter to the previous page")
         if choice == 'i':
             LinksMenu().run()
             Previous_page = input("press enter to the previous page")
@@ -249,6 +250,7 @@ def main():
 
                 login(username)
                 print("You have successfully logged in")
+                find_deleted_appl()
                 main_menu()
             else:
                 print("Incorrect username/password, please try again")
